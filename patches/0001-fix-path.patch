@@ -1,0 +1,36 @@
+From 66737062085d912075837e4defcf985b76c0f25e Mon Sep 17 00:00:00 2001
+From: Shenyufan <751890223@qq.com>
+Date: Wed, 14 Aug 2024 20:02:00 +0800
+Subject: [PATCH] fix-path
+
+---
+ makefile | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/makefile b/makefile
+index 687bf0b..08f1e02 100644
+--- a/makefile
++++ b/makefile
+@@ -1,6 +1,6 @@
+ all:
+ 	mkdir -p release
+-	cc main.c -Ofast -lm -lz -lSDL2 -lGLESv2 -lEGL -o release/wox
++	cc main.c -Ofast -lm -lz -lSDL2 -lGLESv2 -lEGL -o release/wox -I$(PREFIX)/include
+ 	strip --strip-unneeded release/wox
+ 	upx --lzma --best release/wox
+ 
+@@ -11,3 +11,11 @@ test:
+ 
+ clean:
+ 	rm -r release
++
++install:
++	mkdir -p $(PREFIX)/bin
++	mkdir -p $(PREFIX)/share/applications
++	mkdir -p $(PREFIX)/share/icons/hicolor/192x192/apps
++	cp release/wox $(PREFIX)/bin/woxel
++	cp flatpak/woxel.desktop $(PREFIX)/share/applications/woxel.desktop
++	cp flatpak/woxel.png $(PREFIX)/share/icons/hicolor/192x192/apps/woxel.png
+-- 
+2.43.4
+
