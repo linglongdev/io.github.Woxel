@@ -1,0 +1,52 @@
+version: "1"
+
+package:
+  id: io.github.Woxel
+  name: Woxel
+  version: 5.2.0.0
+  kind: app
+  description: |
+    Native Linux / SDL2 Voxel Editor.
+
+base: org.deepin.foundation/23.0.0
+runtime: org.deepin.Runtime/23.0.1
+
+command:
+  - /opt/apps/io.github.Woxel/files/bin/woxel
+
+sources:
+  - kind: git
+    url: https://github.com/woxels/Woxel.git
+    version: master
+    commit: 3ee44a4988c0e3a69c6596d4beb6f41e69e16b5b
+
+  - kind: git
+    url: https://github.com/upx/upx.git
+    version: master
+    commit: 1427b8137a6a3fcbf541e529d9de349230f4ebae
+
+  - kind: git
+    url: https://github.com/libsdl-org/SDL.git
+    version: master
+    commit: 764c44db02c384778c8212adf5f9096d22a2aa3a
+
+build: |
+  cd /project/linglong/sources/SDL.git/
+  cmake -Bbuild \
+        -DCMAKE_INSTALL_PREFIX=${PREFIX} \
+        -DCMAKE_INSTALL_LIBDIR=${PREFIX}/lib/${TRIPLET}
+  cmake --build build
+  cmake --build build --target install
+
+  cd /project/linglong/sources/upx.git/
+  cmake -Bbuild \
+        -DCMAKE_INSTALL_PREFIX=${PREFIX} \
+        -DCMAKE_INSTALL_LIBDIR=${PREFIX}/lib/${TRIPLET}
+  cmake --build build
+  cmake --build build --target install
+  
+  
+  cd /project/linglong/sources/Woxel.git/
+  git apply /project/patches/0001-fix-path.patch
+  make 
+  make install PREFIX=${PREFIX}
